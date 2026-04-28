@@ -4,8 +4,23 @@ export const portfolioData: PortfolioData = {
   home: {
     name: "Febrian",
     role: "Android Developer",
-    biography: "Architecting high-performance, scalable mobile applications. Specializing in modern Android development with Kotlin and Jetpack Compose. I focus on building intuitive user interfaces and ensuring solid backend integration via modern asynchronous programming patterns.",
-    skills: ["Kotlin", "Java", "Jetpack Compose", "Coroutines", "Dagger Hilt", "Room", "Clean Architecture"]
+    biography: "Android Developer with 3+ years of experience in building high-performance, scalable mobile applications. Expert in modern Android development using Kotlin and Jetpack Compose, with a proven track record in optimizing app performance and delivering intuitive user experiences through reactive programming and seamless backend integration.",
+    skills: [
+      "Kotlin & Java",
+      "Jetpack Compose & XML (Legacy)",
+      "Coroutines & Flow (Reactive Programming)",
+      "Clean Architecture & Modularization",
+      "MVVM & MVI Patterns",
+      "Dagger Hilt (Dependency Injection)",
+      "Room Database & DataStore",
+      "Networking (Retrofit, Ktor, OKHttp)",
+      "Paging 3 & WorkManager",
+      "Firebase (Auth, Firestore, Analytics, Crashlytics)",
+      "Performance Optimization (Startup, Memory, Battery)",
+      "Unit & UI Testing (JUnit, Espresso, Compose Test)",
+      "CI/CD (GitHub Actions) & Git",
+      "Agile/Scrum & Technical Documentation"
+    ]
   },
   experience: [
     {

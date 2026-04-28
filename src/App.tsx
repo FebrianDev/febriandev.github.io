@@ -93,7 +93,7 @@ export default function App() {
       <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="text-lg font-bold tracking-tighter text-primary font-headline flex items-center gap-2">
-            DevShell.kt
+            FebrianDev
           </div>
           <nav className="hidden md:flex gap-4 items-center font-headline text-sm font-semibold">
             {navItems.map((item) => (
@@ -144,7 +144,7 @@ export default function App() {
               <h1 className="text-5xl md:text-6xl font-extrabold text-on-surface">{home.name}</h1>
               <h2 className="text-3xl md:text-4xl font-bold text-primary">{home.role}</h2>
             </div>
-            <p className="text-lg md:text-xl text-on-surface-variant max-w-3xl leading-relaxed">
+            <p className="text-lg md:text-xl text-on-surface-variant max-w-5xl leading-relaxed">
               {home.biography}
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
