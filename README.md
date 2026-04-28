@@ -18,3 +18,14 @@ View your app in AI Studio: https://ai.studio/apps/07e65b93-8e29-4bc9-8cb0-9e60b
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Deploy to GitHub Pages
+
+This project is a Vite + React app. GitHub Pages hosts it under `/<repo-name>/`, so the Vite `base` is auto-detected during CI using `GITHUB_REPOSITORY`.
+
+1. Create a GitHub repo (for example: `devshell.kt-portfolio`) and push this project to the `main` branch.
+2. In GitHub, go to **Settings → Pages**:
+   - **Source**: `GitHub Actions`
+3. Wait for the workflow **Deploy to GitHub Pages** to finish.
+4. Your site will be available at:
+   - `https://<username>.github.io/<repo-name>/`

@@ -5,8 +5,15 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  // GitHub Pages serves the app under `/<repo>/`, so we must set `base` accordingly.
+  // We auto-detect the repo name in Actions via GITHUB_REPOSITORY.
+  const repoName = env.GITHUB_REPOSITORY?.split('/')?.[1];
+  const base =
+    env.BASE_PATH ??
+    (repoName ? `/${repoName}/` : '/');
   return {
     plugins: [react(), tailwindcss()],
+    base,
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
