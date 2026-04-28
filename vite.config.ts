@@ -8,9 +8,10 @@ export default defineConfig(({mode}) => {
   // GitHub Pages serves the app under `/<repo>/`, so we must set `base` accordingly.
   // We auto-detect the repo name in Actions via GITHUB_REPOSITORY.
   const repoName = env.GITHUB_REPOSITORY?.split('/')?.[1];
+  const isUserOrOrgPages = Boolean(repoName && repoName.endsWith('.github.io'));
   const base =
     env.BASE_PATH ??
-    (repoName ? `/${repoName}/` : '/');
+    (repoName && !isUserOrOrgPages ? `/${repoName}/` : '/');
   return {
     plugins: [react(), tailwindcss()],
     base,

@@ -18,4 +18,5 @@ This project is a Vite + React app. GitHub Pages hosts it under `/<repo-name>/`,
    - **Source**: `GitHub Actions`
 3. Wait for the workflow **Deploy to GitHub Pages** to finish.
 4. Your site will be available at:
-   - `https://<username>.github.io/<repo-name>/`
+   - For a normal repo: `https://<username>.github.io/<repo-name>/`
+   - For a user/org Pages repo named `<username>.github.io`: `https://<username>.github.io/`
