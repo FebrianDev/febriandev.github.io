@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg: #0d0f14;
+      --bg2: #131620;
+      --card: #1a1f2e;
+      --card-hover: #22293d;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #3d7fff;
+      --accent-hover: #5b9aff;
+      --accent-glow: rgba(61, 127, 255, 0.25);
+      --text: #e8eaf0;
+      --text-muted: #8c93a4;
+      --danger: #ef4444;
+      --success: #22d3a0;
+      --warning: #f59e0b;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .badge-admin {
+      background: rgba(61, 127, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(61, 127, 255, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+
+    /* Auth Card */
+    .auth-wrap {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    .auth-card h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .auth-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font-body);
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .form-hint {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    .alert-success {
+      background: rgba(34, 211, 160, 0.15);
+      border: 1px solid rgba(34, 211, 160, 0.3);
+      color: var(--success);
+    }
+    .alert-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--warning);
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(61, 127, 255, 0.15);
+      border: 1px solid rgba(61, 127, 255, 0.3);
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-head h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+    }
+
+    /* Grid & Cards */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .item-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+    .item-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .item-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+    }
+    .item-subtitle {
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .item-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .item-tag {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+    .item-img-preview {
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 12px;
+      background: var(--card);
+    }
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    /* Config notice banner */
+    .config-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .config-banner code {
+      font-family: var(--font-mono);
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--warning);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <span>🚀 Febrian Portfolio</span>
+      <span class="badge-admin">Admin Panel</span>
+    </div>
+    <div class="topbar-actions">
+      <a href="index.html" class="btn btn-outline btn-sm" target="_blank">🌐 Lihat Web</a>
+      <button id="btn-logout" class="btn btn-danger btn-sm" style="display: none;">Keluar</button>
+    </div>
+  </header>
+
+  <!-- Login Card (Muncul saat belum autentikasi) -->
+  <div id="auth-section" class="auth-wrap">
+    <div class="auth-card">
+      <h2>Admin Login</h2>
+      <p>Masuk untuk mengelola project, pengalaman kerja, dan informasi portofolio kamu.</p>
+
+      <div id="auth-alert" class="alert alert-danger" style="display: none;"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" class="form-control" placeholder="admin@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required />
+        </div>
+        <button type="submit" id="btn-login" class="btn btn-primary" style="width: 100%;">
+          Masuk ke Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Admin Dashboard (Muncul saat sudah autentikasi) -->
+  <main id="dashboard-section" class="container" style="display: none;">
+
+    <!-- Banner jika Supabase belum diatur -->
+    <div id="supabase-unconfigured-banner" class="config-banner" style="display: none;">
+      <strong>⚠️ Konfigurasi Supabase Diperlukan</strong>
+      <p>File <code>supabase-config.js</code> belum diisi dengan Project URL & Anon Key Supabase kamu. Buka file tersebut dan masukkan config dari Supabase Dashboard agar data dapat disimpan ke cloud.</p>
+    </div>
+
+    <!-- Tab Navigasi -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-projects">📱 Projects</button>
+      <button class="tab-btn" data-tab="tab-experience">💼 Experience</button>
+      <button class="tab-btn" data-tab="tab-achievements">🏆 Achievements</button>
+      <button class="tab-btn" data-tab="tab-profile">👤 Profile & Hero</button>
+      <button class="tab-btn" data-tab="tab-sync">⚡ Sync / Backup</button>
+    </nav>
+
+    <!-- TAB 1: PROJECTS -->
+    <section id="tab-projects" class="tab-content">
+      <div class="section-head">
+        <div>
+          <h3>Daftar Project</h3>
+          <p class="form-hint">Kelola aplikasi yang tampil di portfolio kamu.</p>
+        </div>
+        <button id="btn-add-project" class="btn btn-primary btn-sm">+ Tambah Project</button>
+      </div>
+
+      <div id="projects-list" class="items-grid">
+        <p style="color: var(--text-muted);">Memuat project...</p>
+      </div>
+    </section>
+
+    <!-- TAB 2: EXPERIENCE -->
+    <section id="tab-experience" class="tab-content" style="display: none;">
+      <div class="section-head">
+        <div>
+          <h3>Riwayat Pengalaman</h3>
+          <p class="form-hint">Daftar pengalaman kerja atau organisasi.</p>
+        </div>
+        <button id="btn-add-experience" class="btn btn-primary btn-sm">+ Tambah Pengalaman</button>
+      </div>
+
+      <div id="experience-list" class="items-grid">
+        <p style="color: var(--text-muted);">Memuat pengalaman...</p>
+      </div>
+    </section>
+
+    <!-- TAB 3: ACHIEVEMENTS -->
+    <section id="tab-achievements" class="tab-content" style="display: none;">
+      <div class="section-head">
+        <div>
+          <h3>Prestasi & Sertifikasi</h3>
+          <p class="form-hint">Daftar penghargaan, sertifikat kompetensi, atau lisensi profesional.</p>
+        </div>
+        <button id="btn-add-achievement" class="btn btn-primary btn-sm">+ Tambah Prestasi</button>
+      </div>
+
+      <div id="achievements-list" class="items-grid">
+        <p style="color: var(--text-muted);">Memuat prestasi...</p>
+      </div>
+    </section>
+
+    <!-- TAB 3: PROFILE & HERO -->
+    <section id="tab-profile" class="tab-content" style="display: none;">
+      <div class="section-head">
+        <div>
+          <h3>Edit Info Profile & Hero</h3>
+          <p class="form-hint">Ubah teks headline, bio, status ketersediaan, dan kontak.</p>
+        </div>
+      </div>
+
+      <div class="item-card" style="max-width: 700px;">
+        <form id="profile-form">
+          <div class="form-group">
+            <label>Status Ketersediaan</label>
+            <input type="text" id="prof-status" class="form-control" placeholder="Available for new projects" />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label>Hero Title Baris 1</label>
+              <input type="text" id="prof-hero-t1" class="form-control" placeholder="Crafting Seamless" />
+            </div>
+            <div class="form-group">
+              <label>Hero Title Baris 2 (Teks Biru)</label>
+              <input type="text" id="prof-hero-t2" class="form-control" placeholder="Android Experiences" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Hero Subtitle</label>
+            <textarea id="prof-hero-sub" class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Bio (About Me) - Pisahkan tiap paragraf dengan baris baru (Enter)</label>
+            <textarea id="prof-bio" class="form-control" rows="5"></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label>Email Kontak</label>
+              <input type="email" id="prof-email" class="form-control" placeholder="name@email.com" />
+            </div>
+            <div class="form-group">
+              <label>Link Resume (PDF / Drive)</label>
+              <input type="text" id="prof-resume" class="form-control" placeholder="https://..." />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label>GitHub Profile URL</label>
+              <input type="text" id="prof-github" class="form-control" placeholder="https://github.com/username" />
+            </div>
+            <div class="form-group">
+              <label>LinkedIn Profile URL</label>
+              <input type="text" id="prof-linkedin" class="form-control" placeholder="https://linkedin.com/in/username" />
+            </div>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <button type="submit" id="btn-save-profile" class="btn btn-primary">Simpan Perubahan Profil</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: SYNC & BACKUP -->
+    <section id="tab-sync" class="tab-content" style="display: none;">
+      <div class="section-head">
+        <div>
+          <h3>Inisialisasi Data Cepat</h3>
+          <p class="form-hint">Unggah data bawaan dari <code>index.html</code> langsung ke Supabase dalam 1 kali klik.</p>
+        </div>
+      </div>
+
+      <div class="item-card" style="max-width: 600px;">
+        <p style="margin-bottom: 16px; color: var(--text-muted);">
+          Jika database Supabase kamu masih kosong, kamu tidak perlu mengetik ulang semua project & riwayat kerja satu-persatu. Klik tombol di bawah untuk mengunggah data default ke Supabase sekarang:
+        </p>
+        <button id="btn-seed-data" class="btn btn-outline">
+          ⚡ Upload Data Bawaan ke Supabase
+        </button>
+        <div id="seed-status" style="margin-top: 14px; font-size: 13px;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: ADD / EDIT PROJECT -->
+  <div id="modal-project" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-project-title">Tambah Project</h3>
+        <button class="modal-close" id="btn-close-project-modal">&times;</button>
+      </div>
+
+      <form id="project-form">
+        <input type="hidden" id="proj-id" />
+        <input type="hidden" id="proj-current-image" />
+
+        <div class="form-group">
+          <label>Judul Project</label>
+          <input type="text" id="proj-title" class="form-control" placeholder="Contoh: StreamFlow App" required />
+        </div>
+
+        <div class="form-group">
+          <label>Tags (pisahkan dengan koma)</label>
+          <input type="text" id="proj-tags" class="form-control" placeholder="Kotlin, Jetpack Compose, ExoPlayer" required />
+        </div>
+
+        <div class="form-group">
+          <label>Deskripsi Singkat</label>
+          <textarea id="proj-desc" class="form-control" rows="3" placeholder="Jelaskan fitur dan arsitektur aplikasi..." required></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label>Link Project / Play Store</label>
+            <input type="text" id="proj-url" class="form-control" placeholder="https://github.com/..." />
+          </div>
+          <div class="form-group">
+            <label>Link Case Study</label>
+            <input type="text" id="proj-case-url" class="form-control" placeholder="#" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Screenshot / Gambar Mockup</label>
+          <input type="file" id="proj-image-file" class="form-control" accept="image/*" />
+          <p class="form-hint">Format: JPG, PNG, atau WebP. Gambar akan otomatis di-upload ke Firebase Storage.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Atau Tipe Mockup CSS Bawaan (jika tidak upload gambar)</label>
+          <select id="proj-mockup-type" class="form-control">
+            <option value="stream">Video Streaming Mockup</option>
+            <option value="ring">Fitness Ring Chart Mockup</option>
+            <option value="blank">Kosong / Plain</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-outline" id="btn-cancel-project">Batal</button>
+          <button type="submit" id="btn-save-project" class="btn btn-primary">Simpan Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT EXPERIENCE -->
+  <div id="modal-experience" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-exp-title">Tambah Pengalaman</h3>
+        <button class="modal-close" id="btn-close-exp-modal">&times;</button>
+      </div>
+
+      <form id="experience-form">
+        <input type="hidden" id="exp-id" />
+
+        <div class="form-group">
+          <label>Posisi / Role</label>
+          <input type="text" id="exp-role" class="form-control" placeholder="Android Developer" required />
+        </div>
+
+        <div class="form-group">
+          <label>Perusahaan / Institusi</label>
+          <input type="text" id="exp-company" class="form-control" placeholder="PT. Nama Perusahaan" required />
+        </div>
+
+        <div class="form-group">
+          <label>Periode</label>
+          <input type="text" id="exp-period" class="form-control" placeholder="Dec 2023 – Present" required />
+        </div>
+
+        <div class="form-group">
+          <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="exp-is-current" style="width: 16px; height: 16px;" />
+            <span>Masih aktif bekerja di sini (Status Current)</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>Poin-poin Pencapaian / Bullet Points (Satu baris per poin)</label>
+          <textarea id="exp-bullets" class="form-control" rows="4" placeholder="Memimpin migrasi Java ke Kotlin 100%&#10;Implementasi Clean Architecture & Hilt DI" required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-outline" id="btn-cancel-exp">Batal</button>
+          <button type="submit" id="btn-save-exp" class="btn btn-primary">Simpan Pengalaman</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT ACHIEVEMENT -->
+  <div id="modal-achievement" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-achieve-title">Tambah Prestasi / Sertifikat</h3>
+        <button class="modal-close" id="btn-close-achieve-modal">&times;</button>
+      </div>
+
+      <form id="achievement-form">
+        <input type="hidden" id="achieve-id" />
+        <input type="hidden" id="achieve-current-image" />
+
+        <div class="form-group">
+          <label>Judul Prestasi / Nama Sertifikasi</label>
+          <input type="text" id="achieve-title" class="form-control" placeholder="Contoh: Associate Android Developer Certification" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label>Penerbit / Penyelenggara</label>
+            <input type="text" id="achieve-issuer" class="form-control" placeholder="Google / Dicoding" required />
+          </div>
+          <div class="form-group">
+            <label>Tahun / Periode</label>
+            <input type="text" id="achieve-year" class="form-control" placeholder="2024" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Deskripsi Singkat</label>
+          <textarea id="achieve-desc" class="form-control" rows="3" placeholder="Jelaskan kompetensi atau detail penghargaan yang diraih..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Link Kredensial / Verifikasi Sertifikat (Opsional)</label>
+          <input type="text" id="achieve-url" class="form-control" placeholder="https://www.credential.net/..." />
+        </div>
+
+        <div class="form-group">
+          <label>Upload Foto Sertifikat / Badge (Opsional)</label>
+          <input type="file" id="achieve-image-file" class="form-control" accept="image/*" />
+          <p class="form-hint">Format: JPG, PNG, atau WebP. Akan disimpan di Supabase Storage.</p>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-outline" id="btn-cancel-achieve">Batal</button>
+          <button type="submit" id="btn-save-achieve" class="btn btn-primary">Simpan Prestasi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Logika Admin -->
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
+

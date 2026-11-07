@@ -547,12 +547,21 @@
       color: var(--green);
     }
 
+    .project-custom-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .project-tags {
       position: absolute;
       bottom: 12px;
       left: 14px;
       display: flex;
       gap: 6px;
+      z-index: 2;
     }
 
     .tag {
@@ -716,6 +725,78 @@
 
     .exp-date.current {
       color: var(--accent);
+    }
+
+    /* Achievements Grid */
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .achieve-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .achieve-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(61, 127, 255, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .achieve-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .achieve-year {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(61, 127, 255, 0.12);
+      border: 1px solid rgba(61, 127, 255, 0.25);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .achieve-card h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .achieve-issuer {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .achieve-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .achieve-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
     }
 
     .cta-section {
@@ -1106,6 +1187,13 @@
     <div class="experience-list" id="exp-list"></div>
   </section>
 
+  <section id="achievements" style="display:none;background:var(--bg);">
+    <div class="section-header fade-in">
+      <h2>Honors & Certifications</h2>
+    </div>
+    <div class="achievements-grid" id="achievements-grid"></div>
+  </section>
+
   <section class="cta-section" id="contact">
     <div class="cta-content fade-in" id="cta-content"></div>
   </section>
@@ -1237,6 +1325,11 @@
         // Tambah pengalaman lain di sini
       ],
 
+      /* Achievements / Sertifikasi */
+      achievements: [
+        // Akan terisi otomatis dari Supabase jika ada
+      ],
+
       /* CTA / Contact section */
       cta: {
         heading: "Ready to build something amazing?",
@@ -1288,29 +1381,31 @@
     };
 
     /* ================================================================
-       RENDER ENGINE — jangan edit di bawah ini
+       RENDER ENGINE & SUPABASE DYNAMIC INTEGRATION
        ================================================================ */
 
-    document.getElementById('page-title').textContent =
-      `${portfolioData.name} | ${portfolioData.role}`;
+    function renderPortfolio(data) {
+      document.getElementById('page-title').textContent =
+        `${data.name} | ${data.role}`;
 
-    // Navbar
-    document.getElementById('navbar').innerHTML = `
-  <a href="#" class="nav-logo">
-    <span class="logo-icon">${portfolioData.initials}</span>
-    ${portfolioData.name} | ${portfolioData.role}
-  </a>
-  <ul class="nav-links">
-    <li><a href="#about">Home</a></li>
-    <li><a href="#about-me">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-actions">
-    <a href="${portfolioData.resumeUrl}" class="btn btn-outline" target="_blank">Resume</a>
-    <a href="#contact" class="btn btn-primary">Hire Me</a>
-  </div>`;
+      // Navbar
+      document.getElementById('navbar').innerHTML = `
+    <a href="#" class="nav-logo">
+      <span class="logo-icon">${data.initials}</span>
+      ${data.name} | ${data.role}
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">Home</a></li>
+      <li><a href="#about-me">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      ${data.achievements && data.achievements.length > 0 ? `<li><a href="#achievements">Achievements</a></li>` : ''}
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="${data.resumeUrl}" class="btn btn-outline" target="_blank">Resume</a>
+      <a href="#contact" class="btn btn-primary">Hire Me</a>
+    </div>`;
 
     // Hero code BG (dekoratif)
     const CODE = `<span class="cm">// StreamFlow Adaptive Bitrate</span>
@@ -1413,7 +1508,10 @@
   </div>`).join('');
 
     // Projects
-    function buildMockup(type) {
+    function buildMockup(type, imageUrl) {
+      if (imageUrl) {
+        return `<img src="${imageUrl}" alt="Project preview" class="project-custom-img" />`;
+      }
       if (type === 'stream') return `
     <div class="phone-mockup">
       <div class="phone-inner">
@@ -1434,11 +1532,11 @@
       return '';
     }
 
-    document.getElementById('projects-grid').innerHTML = portfolioData.projects.map((p, i) => `
+    document.getElementById('projects-grid').innerHTML = data.projects.map((p, i) => `
   <div class="project-card fade-in stagger-${(i % 2) + 1}">
     <div class="project-img project-img-${i % 4}">
-      ${buildMockup(p.mockupType)}
-      <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      ${buildMockup(p.mockupType, p.imageUrl)}
+      <div class="project-tags">${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
     </div>
     <div class="project-info">
       <div class="project-title-row">
@@ -1451,28 +1549,49 @@
   </div>`).join('');
 
     // Experience
-    document.getElementById('exp-list').innerHTML = portfolioData.experience.map(exp => `
+    document.getElementById('exp-list').innerHTML = data.experience.map(exp => `
   <div class="exp-item fade-in">
     <div class="exp-dot${exp.isCurrent ? ' active' : ''}"></div>
     <div class="exp-body">
       <h3>${exp.role}</h3>
       <div class="exp-company">${exp.company}</div>
-      <ul>${exp.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+      <ul>${(exp.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>
     </div>
     <div class="exp-date${exp.isCurrent ? ' current' : ''}">${exp.period}</div>
   </div>`).join('');
 
+    // Achievements
+    const achSection = document.getElementById('achievements');
+    const achGrid = document.getElementById('achievements-grid');
+    if (data.achievements && data.achievements.length > 0) {
+      achSection.style.display = 'block';
+      achGrid.innerHTML = data.achievements.map((a, i) => `
+    <div class="achieve-card fade-in stagger-${(i % 3) + 1}">
+      ${a.imageUrl ? `<img src="${a.imageUrl}" alt="${a.title}" class="achieve-img" />` : ''}
+      <div class="achieve-header-row">
+        <span class="achieve-year">${a.year || ''}</span>
+        ${a.credentialUrl && a.credentialUrl !== '#' ? `<a href="${a.credentialUrl}" class="icon-link" target="_blank" title="Lihat Sertifikat">↗</a>` : ''}
+      </div>
+      <h3>${a.title}</h3>
+      <div class="achieve-issuer">${a.issuer || ''}</div>
+      ${a.description ? `<p class="achieve-desc">${a.description}</p>` : ''}
+      ${a.credentialUrl && a.credentialUrl !== '#' ? `<a href="${a.credentialUrl}" class="case-link" target="_blank">View Credential →</a>` : ''}
+    </div>`).join('');
+    } else {
+      achSection.style.display = 'none';
+    }
+
     // CTA
-    const c = portfolioData.cta;
+    const c = data.cta;
     document.getElementById('cta-content').innerHTML = `
   <h2>${c.heading}</h2>
   <p>${c.subtext}</p>
   <a href="mailto:${c.email}" class="btn-cta">✉ ${c.buttonLabel}</a>`;
 
     // Footer
-    const s = portfolioData.social;
+    const s = data.social;
     document.getElementById('footer').innerHTML = `
-  <p>© ${portfolioData.year} ${portfolioData.name}. All rights reserved.</p>
+  <p>© ${data.year} ${data.name}. All rights reserved.</p>
   <div class="footer-links">
     <a href="${s.github}" title="GitHub" target="_blank">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
@@ -1488,6 +1607,82 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     setTimeout(() => document.querySelector('.hero .fade-in')?.classList.add('visible'), 100);
+  }
+
+  // 1. Render data awal (instan tanpa delay loading)
+  renderPortfolio(portfolioData);
+
+  // 2. Fetch data dinamis dari Supabase (jika sudah dikonfigurasi)
+  async function initDynamicData() {
+    try {
+      const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+      const { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } = await import("./supabase-config.js");
+
+      if (!isSupabaseConfigured()) return;
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // Fetch Profile
+      const { data: profile } = await supabase.from('profile_settings').select('*').eq('id', 1).maybeSingle();
+      if (profile) {
+        if (profile.status_text) portfolioData.hero.statusText = profile.status_text;
+        if (profile.hero_title_1) portfolioData.hero.titleLine1 = profile.hero_title_1;
+        if (profile.hero_title_2) portfolioData.hero.titleLine2 = profile.hero_title_2;
+        if (profile.hero_subtitle) portfolioData.hero.subtitle = profile.hero_subtitle;
+        if (profile.bio && profile.bio.length) portfolioData.aboutMe.bio = profile.bio;
+        if (profile.email) portfolioData.cta.email = profile.email;
+        if (profile.resume_url) portfolioData.resumeUrl = profile.resume_url;
+        if (profile.github_url) portfolioData.social.github = profile.github_url;
+        if (profile.linkedin_url) portfolioData.social.linkedin = profile.linkedin_url;
+      }
+
+      // Fetch Projects
+      const { data: projects } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+      if (projects && projects.length > 0) {
+        portfolioData.projects = projects.map(p => ({
+          title: p.title,
+          tags: p.tags || [],
+          description: p.description,
+          caseStudyUrl: p.case_study_url || '#',
+          projectUrl: p.project_url || '#',
+          mockupType: p.mockup_type || 'stream',
+          imageUrl: p.image_url || ''
+        }));
+      }
+
+      // Fetch Experiences
+      const { data: experiences } = await supabase.from('experiences').select('*').order('created_at', { ascending: false });
+      if (experiences && experiences.length > 0) {
+        portfolioData.experience = experiences.map(exp => ({
+          role: exp.role,
+          company: exp.company,
+          period: exp.period,
+          isCurrent: !!exp.is_current,
+          bullets: exp.bullets || []
+        }));
+      }
+
+      // Fetch Achievements
+      const { data: achievements } = await supabase.from('achievements').select('*').order('created_at', { ascending: false });
+      if (achievements && achievements.length > 0) {
+        portfolioData.achievements = achievements.map(a => ({
+          title: a.title,
+          issuer: a.issuer,
+          year: a.year,
+          description: a.description,
+          credentialUrl: a.credential_url,
+          imageUrl: a.image_url || ''
+        }));
+      }
+
+      // Re-render dengan data terbaru dari Supabase!
+      renderPortfolio(portfolioData);
+    } catch (err) {
+      console.warn("Supabase fetch fallback to local data:", err);
+    }
+  }
+
+  initDynamicData();
   </script>
 </body>
 
