@@ -600,17 +600,17 @@
     <section id="tab-sync" class="tab-content" style="display: none;">
       <div class="section-head">
         <div>
-          <h3>Inisialisasi Data Cepat</h3>
-          <p class="form-hint">Unggah data bawaan dari <code>index.html</code> langsung ke Supabase dalam 1 kali klik.</p>
+          <h3>Sinkronisasi Data CV ke Supabase</h3>
+          <p class="form-hint">Unggah data terbaru dari CV (<code>js/portfolio-data.js</code>) langsung ke Supabase dalam 1 kali klik.</p>
         </div>
       </div>
 
       <div class="item-card" style="max-width: 600px;">
         <p style="margin-bottom: 16px; color: var(--text-muted);">
-          Jika database Supabase kamu masih kosong, kamu tidak perlu mengetik ulang semua project & riwayat kerja satu-persatu. Klik tombol di bawah untuk mengunggah data default ke Supabase sekarang:
+          Klik tombol di bawah untuk mengganti data dummy di Supabase dengan daftar project, pengalaman kerja, prestasi &amp; sertifikasi, serta profil dari CV terbaru:
         </p>
         <button id="btn-seed-data" class="btn btn-outline">
-          ⚡ Upload Data Bawaan ke Supabase
+          ⚡ Sync Data CV ke Supabase
         </button>
         <div id="seed-status" style="margin-top: 14px; font-size: 13px;"></div>
       </div>
@@ -657,17 +657,21 @@
         </div>
 
         <div class="form-group">
-          <label>Upload Screenshot / Gambar Mockup</label>
+          <label>Upload Gambar Background / Banner Project</label>
           <input type="file" id="proj-image-file" class="form-control" accept="image/*" />
-          <p class="form-hint">Format: JPG, PNG, atau WebP. Gambar akan otomatis di-upload ke Firebase Storage.</p>
+          <p class="form-hint">Format: JPG, PNG, atau WebP (disarankan rasio lebar 16:9 seperti Feature Graphic Play Store). Di-upload ke Supabase Storage.</p>
         </div>
 
         <div class="form-group">
-          <label>Atau Tipe Mockup CSS Bawaan (jika tidak upload gambar)</label>
+          <label>Ikon Logo Default</label>
           <select id="proj-mockup-type" class="form-control">
-            <option value="stream">Video Streaming Mockup</option>
-            <option value="ring">Fitness Ring Chart Mockup</option>
-            <option value="blank">Kosong / Plain</option>
+            <option value="field">Field Operations / GPS</option>
+            <option value="qr">QR &amp; Barcode Scanner</option>
+            <option value="stream">Audio / Video Streaming</option>
+            <option value="compose">Jetpack Compose / Layers</option>
+            <option value="bst">Binary Search Tree / Graph</option>
+            <option value="ring">Analytics / Timer Ring</option>
+            <option value="blank">Default Icon</option>
           </select>
         </div>
 
@@ -778,6 +782,7 @@
   </div>
 
   <!-- Script Logika Admin -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script type="module" src="js/admin.js"></script>
 </body>
 </html>

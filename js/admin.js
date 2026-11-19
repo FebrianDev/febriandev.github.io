@@ -1,9 +1,10 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } from "./config.js";
+import { PORTFOLIO_DEFAULT_DATA } from "./portfolio-data.js";
 
 // Inisialisasi Supabase Client
+const createClient = globalThis.supabase?.createClient;
 let supabase = null;
-if (isSupabaseConfigured()) {
+if (isSupabaseConfigured() && typeof createClient === "function") {
   supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
@@ -135,6 +136,7 @@ async function loadProjects() {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -155,8 +157,8 @@ async function loadProjects() {
         .join("");
 
       const previewHtml = p.image_url
-        ? `<img src="${p.image_url}" alt="${escapeHtml(p.title)}" class="item-img-preview" />`
-        : `<div style="height:80px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);margin-bottom:12px;font-size:12px;">Mockup: ${p.mockup_type || 'default'}</div>`;
+        ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" class="item-img-preview" />`
+        : `<div style="height:80px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);margin-bottom:12px;font-size:12px;border:1px solid var(--border);">Icon: ${escapeHtml(p.mockup_type || 'default')}</div>`;
 
       return `
       <div class="item-card">
@@ -321,6 +323,7 @@ async function loadExperience() {
   const { data, error } = await supabase
     .from("experiences")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -465,6 +468,7 @@ async function loadAchievements() {
   const { data, error } = await supabase
     .from("achievements")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -695,7 +699,7 @@ profileForm.addEventListener("submit", async (e) => {
 });
 
 // ----------------------------------------------------
-// 5. SEED DATA OTOMATIS (MENGUNGGAH DATA BAWAAN KE SUPABASE)
+// 5. SEED DATA OTOMATIS (MENGUNGGAH DATA CV KE SUPABASE)
 // ----------------------------------------------------
 const btnSeed = document.getElementById("btn-seed-data");
 const seedStatus = document.getElementById("seed-status");
@@ -706,108 +710,84 @@ btnSeed.addEventListener("click", async () => {
     return;
   }
 
-  if (!confirm("Upload data bawaan dari index.html ke Supabase sekarang?")) return;
+  if (
+    !confirm(
+      "Sync data CV ke Supabase sekarang? Ini akan mengganti projects, experiences, achievements, dan profile dengan data CV terbaru."
+    )
+  ) {
+    return;
+  }
 
   btnSeed.disabled = true;
-  seedStatus.innerHTML = '<span class="loading-spinner"></span> Sedang mengunggah data bawaan...';
+  seedStatus.innerHTML = '<span class="loading-spinner"></span> Sedang menyinkronkan data CV ke Supabase...';
 
   try {
-    // 1. Projects bawaan
-    const defaultProjects = [
-      {
-        title: "StreamFlow App",
-        tags: ["Kotlin", "ExoPlayer"],
-        description: "A high-performance video streaming application featuring adaptive bitrate streaming, offline playback, and a custom UI built with Jetpack Compose.",
-        case_study_url: "#",
-        project_url: "#",
-        mockup_type: "stream",
-        image_url: "",
-      },
-      {
-        title: "FitTrack Pro",
-        tags: ["MVVM", "Room DB"],
-        description: "Comprehensive fitness tracking app integrating Google Fit API, real-time step counting, and detailed chart visualizations for progress monitoring.",
-        case_study_url: "#",
-        project_url: "#",
-        mockup_type: "ring",
-        image_url: "",
-      },
-    ];
+    const defaultProjects = PORTFOLIO_DEFAULT_DATA.projects.map((p, index) => ({
+      title: p.title,
+      tags: p.tags || [],
+      description: p.description || "",
+      case_study_url: p.caseStudyUrl || "#",
+      project_url: p.projectUrl || "#",
+      mockup_type: p.mockupType || "field",
+      image_url: p.imageUrl || "",
+      sort_order: p.sortOrder ?? index + 1,
+    }));
 
-    // 2. Experience bawaan
-    const defaultExp = [
-      {
-        role: "Android Developer",
-        company: "PT. VIRTUSEE PETA SUKSES",
-        period: "Dec 2023 – Present",
-        is_current: true,
-        bullets: [
-          "Led the migration of a legacy Java codebase to 100% Kotlin, reducing crash rates by 40%.",
-          "Implemented a modular architecture using Dagger Hilt, improving build times by 25%.",
-          "Mentored 3 junior developers and established code review guidelines.",
-        ],
-      },
-      {
-        role: "Android Developer",
-        company: "Viuit",
-        period: "Aug 2023 – Nov 2023",
-        is_current: false,
-        bullets: [
-          "Developed and launched 5+ Android applications on the Google Play Store.",
-          "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-          "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-        ],
-      },
-      {
-        role: "Android Developer Intern",
-        company: "Berani Digital ID",
-        period: "May 2022 – Dec 2022",
-        is_current: false,
-        bullets: [
-          "Developed and launched 5+ Android applications on the Google Play Store.",
-          "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-          "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-        ],
-      },
-      {
-        role: "Android Developer",
-        company: "MSIB Kampus Merdeka",
-        period: "Aug 2021 – Jan 2022",
-        is_current: false,
-        bullets: [
-          "Developed and launched 5+ Android applications on the Google Play Store.",
-          "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-          "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-        ],
-      },
-    ];
+    const defaultExp = PORTFOLIO_DEFAULT_DATA.experience.map((exp, index) => ({
+      role: exp.role,
+      company: exp.company,
+      period: exp.period,
+      is_current: Boolean(exp.isCurrent),
+      bullets: exp.bullets || [],
+      sort_order: exp.sortOrder ?? index + 1,
+    }));
 
-    // 3. Profile bawaan
+    const defaultAchievements = PORTFOLIO_DEFAULT_DATA.achievements.map((a, index) => ({
+      title: a.title,
+      issuer: a.issuer,
+      year: a.year,
+      description: a.description || "",
+      credential_url: a.credentialUrl || "#",
+      image_url: a.imageUrl || "",
+      sort_order: a.sortOrder ?? index + 1,
+    }));
+
     const defaultProfile = {
       id: 1,
-      status_text: "Available for new projects",
-      hero_title_1: "Crafting Seamless",
-      hero_title_2: "Android Experiences",
-      hero_subtitle: "Passionate Android Developer specializing in Kotlin, Jetpack Compose, and creating robust, scalable mobile applications that users love.",
-      bio: [
-        "Hi, my name is Febrian, an Android Developer with 3+ years of hands-on experience building modern Android applications. I'm a graduate of Game Technology student at Electronic Engineering Polytechnic Institute of Surabaya, I bring a strong technical foundation and a problem-solving mindset to every project.",
-        "Expertise in Kotlin and Jetpack Compose, focusing on clean architecture, scalable systems, and intuitive user interfaces. I’m driven by continuous improvement and passionate about building apps that are not only functional, but thoughtfully engineered.",
-      ],
-      email: "johndoe@email.com",
-      resume_url: "#",
-      github_url: "https://github.com/",
-      linkedin_url: "https://linkedin.com/in/",
+      status_text: PORTFOLIO_DEFAULT_DATA.hero.statusText,
+      hero_title_1: PORTFOLIO_DEFAULT_DATA.hero.titleLine1,
+      hero_title_2: PORTFOLIO_DEFAULT_DATA.hero.titleLine2,
+      hero_subtitle: PORTFOLIO_DEFAULT_DATA.hero.subtitle,
+      bio: PORTFOLIO_DEFAULT_DATA.aboutMe.bio,
+      email: PORTFOLIO_DEFAULT_DATA.cta.email,
+      resume_url: PORTFOLIO_DEFAULT_DATA.resumeUrl,
+      github_url: PORTFOLIO_DEFAULT_DATA.social.github,
+      linkedin_url: PORTFOLIO_DEFAULT_DATA.social.linkedin,
+      updated_at: new Date().toISOString(),
     };
 
-    // Insert to Supabase
-    await supabase.from("projects").insert(defaultProjects);
-    await supabase.from("experiences").insert(defaultExp);
-    await supabase.from("profile_settings").upsert(defaultProfile);
+    const deleteResults = await Promise.all([
+      supabase.from("projects").delete().not("id", "is", null),
+      supabase.from("experiences").delete().not("id", "is", null),
+      supabase.from("achievements").delete().not("id", "is", null),
+    ]);
+    const deleteErr = deleteResults.find((res) => res.error)?.error;
+    if (deleteErr) throw deleteErr;
 
-    seedStatus.innerHTML = '<span style="color: var(--success);">✅ Berhasil mengunggah semua data bawaan ke Supabase!</span>';
+    const writeResults = await Promise.all([
+      supabase.from("projects").insert(defaultProjects),
+      supabase.from("experiences").insert(defaultExp),
+      supabase.from("achievements").insert(defaultAchievements),
+      supabase.from("profile_settings").upsert(defaultProfile),
+    ]);
+    const writeErr = writeResults.find((res) => res.error)?.error;
+    if (writeErr) throw writeErr;
+
+    seedStatus.innerHTML =
+      '<span style="color: var(--success);">✅ Berhasil menyinkronkan semua data CV ke Supabase!</span>';
     loadAllDashboardData();
   } catch (err) {
-    seedStatus.innerHTML = `<span style="color: var(--danger);">❌ Gagal mengunggah: ${err.message}</span>`;
+    seedStatus.innerHTML = `<span style="color: var(--danger);">❌ Gagal menyinkronkan: ${escapeHtml(err.message)}</span>`;
   } finally {
     btnSeed.disabled = false;
   }

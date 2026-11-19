@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -27,13 +27,13 @@
       --accent: #3d7fff;
       --accent2: #5b9aff;
       --accent-glow: rgba(61, 127, 255, 0.25);
-      --text: #e8eaf0;
-      --text-muted: #6b7280;
-      --text-dim: #9ca3af;
+      --text: #dce0ea;
+      --text-muted: #7c8596;
+      --text-dim: #a1a8b8;
       --green: #22d3a0;
-      --font-display: 'Satoshi', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
     }
 
     html {
@@ -45,7 +45,10 @@
       color: var(--text);
       font-family: var(--font-body);
       font-size: 15px;
-      line-height: 1.6;
+      font-weight: 400;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
 
@@ -83,7 +86,7 @@
       align-items: center;
       gap: 10px;
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 600;
       font-size: 15px;
       color: var(--text);
       text-decoration: none;
@@ -287,11 +290,11 @@
 
     .hero-title {
       font-family: var(--font-display);
-      font-size: clamp(40px, 5vw, 64px);
-      font-weight: 800;
-      line-height: 1.1;
+      font-size: clamp(38px, 4.8vw, 60px);
+      font-weight: 700;
+      line-height: 1.12;
       margin-bottom: 20px;
-      letter-spacing: -1.5px;
+      letter-spacing: -1px;
     }
 
     .hero-title .accent {
@@ -327,98 +330,15 @@
 
     .section-header h2 {
       font-family: var(--font-display);
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1px;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
       margin-bottom: 8px;
     }
 
     .section-header p {
       color: var(--text-muted);
       font-size: 15px;
-    }
-
-    .section-header-row {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-    }
-
-    .view-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: gap 0.2s;
-    }
-
-    .view-link:hover {
-      gap: 8px;
-    }
-
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .tech-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 26px;
-      transition: all 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tech-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .tech-card:hover {
-      border-color: rgba(61, 127, 255, 0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .tech-card:hover::before {
-      opacity: 1;
-    }
-
-    .tech-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(61, 127, 255, 0.12);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-      font-size: 18px;
-    }
-
-    .tech-card h3 {
-      font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .tech-card p {
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.6;
     }
 
     .projects-grid {
@@ -432,19 +352,26 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
       transition: all 0.25s;
     }
 
     .project-card:hover {
-      border-color: rgba(61, 127, 255, 0.3);
+      border-color: rgba(61, 127, 255, 0.35);
       transform: translateY(-4px);
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.45);
     }
 
     .project-img {
-      height: 220px;
+      width: 100%;
+      aspect-ratio: 1024 / 500;
       position: relative;
       overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .project-img-0 {
@@ -463,138 +390,132 @@
       background: linear-gradient(135deg, #1a0d0d 0%, #301515 40%, #200f0f 100%);
     }
 
-    .phone-mockup {
-      position: absolute;
-      right: 40px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 100px;
-      height: 180px;
-      background: #1a1a2e;
-      border-radius: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      overflow: hidden;
-      box-shadow: -20px 10px 60px rgba(0, 0, 0, 0.6);
-    }
-
-    .phone-mockup::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 30px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-    }
-
-    .phone-inner {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding-top: 16px;
-      gap: 8px;
-    }
-
-    .phone-landscape {
-      width: 80px;
-      height: 50px;
-      background: linear-gradient(135deg, #c2956c, #85a0b8);
-      border-radius: 4px;
-    }
-
-    .phone-nav-bar {
-      display: flex;
-      gap: 6px;
-      padding: 0 8px;
-      width: 100%;
-    }
-
-    .phone-nav-item {
-      height: 4px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.2);
-      flex: 1;
-    }
-
-    .phone-nav-item.active {
-      background: var(--accent);
-    }
-
-    .ring-chart {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 6px solid rgba(255, 255, 255, 0.05);
-      border-top-color: var(--green);
-      border-right-color: var(--green);
-      position: relative;
-    }
-
-    .ring-chart span {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      color: var(--green);
-    }
-
     .project-custom-img {
-      position: absolute;
-      inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    .project-banner-mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .project-banner-mark svg {
+      width: 28px;
+      height: 28px;
     }
 
     .project-tags {
-      position: absolute;
-      bottom: 12px;
-      left: 14px;
       display: flex;
+      flex-wrap: wrap;
       gap: 6px;
-      z-index: 2;
     }
 
     .tag {
-      padding: 3px 10px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 4px;
+      padding: 3px 9px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 5px;
       font-size: 11px;
       font-family: var(--font-mono);
       color: var(--text-dim);
     }
 
     .project-info {
-      padding: 22px 24px 24px;
+      padding: 20px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex-grow: 1;
+    }
+
+    .project-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .project-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(61, 127, 255, 0.12);
+      color: var(--accent2);
+    }
+
+    .project-logo.has-img {
+      background: #fff;
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .project-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-logo svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .project-logo-1 {
+      background: rgba(34, 211, 160, 0.12);
+      color: var(--green);
+    }
+
+    .project-logo-2 {
+      background: rgba(139, 92, 246, 0.14);
+      color: #a78bfa;
+    }
+
+    .project-logo-3 {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fbbf24;
+    }
+
+    .project-head-meta {
+      flex: 1;
+      min-width: 0;
     }
 
     .project-title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      gap: 12px;
     }
 
     .project-title-row h3 {
       font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.35;
     }
 
     .icon-link {
       color: var(--text-muted);
       text-decoration: none;
       font-size: 16px;
+      line-height: 1;
+      flex-shrink: 0;
       transition: color 0.2s;
     }
 
@@ -602,11 +523,19 @@
       color: var(--accent);
     }
 
-    .project-info p {
+    .project-desc {
       color: var(--text-muted);
       font-size: 13.5px;
       line-height: 1.65;
-      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .project-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-top: 2px;
     }
 
     .case-link {
@@ -622,7 +551,7 @@
     }
 
     .exp-bg {
-      background: var(--bg2);
+      background: var(--bg);
     }
 
     .experience-list {
@@ -658,7 +587,7 @@
       height: 22px;
       border-radius: 50%;
       border: 2px solid var(--border);
-      background: var(--bg2);
+      background: var(--bg);
       position: relative;
       z-index: 1;
       margin-top: 2px;
@@ -680,8 +609,8 @@
 
     .exp-body h3 {
       font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 17.5px;
+      font-weight: 600;
       margin-bottom: 4px;
     }
 
@@ -770,10 +699,10 @@
 
     .achieve-card h3 {
       font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 16.5px;
+      font-weight: 600;
       margin-bottom: 4px;
-      color: #fff;
+      color: var(--text);
     }
 
     .achieve-issuer {
@@ -826,10 +755,10 @@
 
     .cta-content h2 {
       font-family: var(--font-display);
-      font-size: clamp(28px, 3.5vw, 44px);
-      font-weight: 800;
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 600;
       margin-bottom: 16px;
-      letter-spacing: -1px;
+      letter-spacing: -0.6px;
     }
 
     .cta-content p {
@@ -945,8 +874,8 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 64px;
-      font-weight: 800;
+      font-size: 56px;
+      font-weight: 700;
       color: #fff;
       overflow: hidden;
     }
@@ -992,27 +921,52 @@
     .about-bio {
       font-size: 15.5px;
       color: var(--text-dim);
-      line-height: 1.85;
-      margin-bottom: 32px;
+      line-height: 1.8;
+      margin-bottom: 24px;
     }
 
     .about-bio p+p {
-      margin-top: 16px;
+      margin-top: 14px;
+    }
+
+    .about-edu {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 28px;
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .about-edu strong {
+      color: var(--text);
+      font-weight: 500;
     }
 
     .about-highlights {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .highlight-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .highlight-item strong {
+      color: var(--text);
+      font-weight: 500;
     }
 
     .highlight-icon {
@@ -1119,16 +1073,24 @@
         display: none
       }
 
-      .tech-grid {
-        grid-template-columns: 1fr 1fr
-      }
-
       .projects-grid {
         grid-template-columns: 1fr
       }
 
       footer {
         padding: 16px 24px
+      }
+    }
+
+    @media(max-width:560px) {
+      .exp-item {
+        grid-template-columns: 24px 1fr;
+        gap: 12px 16px;
+      }
+
+      .exp-date {
+        grid-column: 2;
+        padding-top: 0;
       }
     }
   </style>
@@ -1160,24 +1122,13 @@
       </div>
       <div class="about-right fade-in stagger-2">
         <div class="about-bio" id="about-bio"></div>
-        <div class="about-label">What I do</div>
+        <div class="about-edu" id="about-education"></div>
+        <div class="about-label">Core Stack</div>
         <div class="about-highlights" id="about-highlights"></div>
-        <div class="about-label">Interests</div>
+        <div class="about-label">Focus Areas</div>
         <div class="about-interests" id="about-interests"></div>
       </div>
     </div>
-  </section>
-
-  <section id="tech" style="background:var(--bg);">
-    <div class="section-header section-header-row fade-in" id="tech-header"></div>
-    <div class="tech-grid" id="tech-grid"></div>
-  </section>
-
-  <section id="projects">
-    <div class="section-header fade-in">
-      <h2>Featured Projects</h2>
-    </div>
-    <div class="projects-grid" id="projects-grid"></div>
   </section>
 
   <section class="exp-bg" id="experience">
@@ -1185,6 +1136,13 @@
       <h2>Experience</h2>
     </div>
     <div class="experience-list" id="exp-list"></div>
+  </section>
+
+  <section id="projects" style="background:var(--bg2);">
+    <div class="section-header fade-in">
+      <h2>Featured Projects</h2>
+    </div>
+    <div class="projects-grid" id="projects-grid"></div>
   </section>
 
   <section id="achievements" style="display:none;background:var(--bg);">
@@ -1201,6 +1159,7 @@
   <footer id="footer"></footer>
 
   <!-- Data Dinamis dari Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 

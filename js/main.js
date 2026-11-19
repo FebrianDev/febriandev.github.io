@@ -1,210 +1,17 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } from "./config.js";
+import {
+  PORTFOLIO_DEFAULT_DATA,
+  HERO_CODE_SNIPPET,
+  applySupabaseProfileOverrides,
+  isLegacySupabaseProjects,
+  isLegacySupabaseExperiences,
+} from "./portfolio-data.js";
 
-// Inisialisasi Supabase Client
-const supabase = isSupabaseConfigured()
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
-
-// Data Default / Fallback jika Supabase belum terisi atau sedang offline
-const defaultData = {
-  name: "Febrian",
-  role: "Android Developer",
-  initials: "FDev",
-  year: new Date().getFullYear(),
-  resumeUrl: "#",
-  hero: {
-    statusText: "Available for new projects",
-    titleLine1: "Crafting Seamless",
-    titleLine2: "Android Experiences",
-    subtitle: "Passionate Android Developer specializing in Kotlin, Jetpack Compose, and creating robust, scalable mobile applications that users love.",
-    ctaPrimary: { label: "View Projects", href: "#projects" },
-    ctaSecondary: { label: "Contact Me", href: "#contact" },
-  },
-  techStack: {
-    sectionSubtitle: "Modern tools for high-performance apps.",
-    resumeLink: { label: "View full resume", href: "#" },
-    items: [
-      { icon: "⌨️", title: "Kotlin & Java", desc: "Expert proficiency in modern Android languages and coroutines.", iconBg: "" },
-      { icon: "🎨", title: "Jetpack Compose", desc: "Building declarative, reactive UIs for faster development.", iconBg: "" },
-      { icon: "🏛️", title: "Clean Arch", desc: "MVVM, MVI patterns ensuring scalable codebases.", iconBg: "rgba(139,92,246,0.12)" },
-      { icon: "🔧", title: "CI/CD & Tools", desc: "Gradle, Firebase, Git, and automated testing pipelines.", iconBg: "rgba(245,158,11,0.12)" },
-    ],
-  },
-  aboutMe: {
-    photoUrl: "",
-    bio: [
-      "Hi, my name is Febrian, an Android Developer with 3+ years of hands-on experience building modern Android applications. I'm a graduate of Game Technology student at Electronic Engineering Polytechnic Institute of Surabaya, I bring a strong technical foundation and a problem-solving mindset to every project.",
-      "Expertise in Kotlin and Jetpack Compose, focusing on clean architecture, scalable systems, and intuitive user interfaces. I’m driven by continuous improvement and passionate about building apps that are not only functional, but thoughtfully engineered."
-    ],
-    stats: [
-      { num: "3+", label: "Years Exp." },
-      { num: "10+", label: "Apps Built" },
-      { num: "10M+", label: "Users" },
-      { num: "4.8", label: "Avg Rating" },
-    ],
-    highlights: [
-      { icon: "📱", text: "Build native Android apps with Kotlin & Jetpack Compose" },
-      { icon: "🏗️", text: "Architect scalable apps with Clean Architecture & MVVM" },
-      { icon: "🔗", text: "Integrate REST APIs, Firebase, and third-party SDKs" },
-      { icon: "🧪", text: "Write testable code with unit & UI tests (JUnit, Espresso)" },
-    ],
-    interests: [
-      "Open Source", "Android Beta", "UI/UX", "Kotlin Coroutines",
-      "Gaming", "Movie", "Coffee ☕", "Code"
-    ],
-  },
-  projects: [
-    {
-      title: "StreamFlow App",
-      tags: ["Kotlin", "ExoPlayer"],
-      description: "A high-performance video streaming application featuring adaptive bitrate streaming, offline playback, and a custom UI built with Jetpack Compose.",
-      caseStudyUrl: "#",
-      projectUrl: "#",
-      mockupType: "stream",
-      imageUrl: "",
-    },
-    {
-      title: "FitTrack Pro",
-      tags: ["MVVM", "Room DB"],
-      description: "Comprehensive fitness tracking app integrating Google Fit API, real-time step counting, and detailed chart visualizations for progress monitoring.",
-      caseStudyUrl: "#",
-      projectUrl: "#",
-      mockupType: "ring",
-      imageUrl: "",
-    },
-  ],
-  experience: [
-    {
-      role: "Android Developer",
-      company: "PT. VIRTUSEE PETA SUKSES",
-      period: "Dec 2023 – Present",
-      isCurrent: true,
-      bullets: [
-        "Led the migration of a legacy Java codebase to 100% Kotlin, reducing crash rates by 40%.",
-        "Implemented a modular architecture using Dagger Hilt, improving build times by 25%.",
-        "Mentored 3 junior developers and established code review guidelines.",
-      ],
-    },
-    {
-      role: "Android Developer",
-      company: "Viuit",
-      period: "Aug 2023 – Nov 2023",
-      isCurrent: false,
-      bullets: [
-        "Developed and launched 5+ Android applications on the Google Play Store.",
-        "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-        "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-      ],
-    },
-    {
-      role: "Android Developer Intern",
-      company: "Berani Digital ID",
-      period: "May 2022 – Dec 2022",
-      isCurrent: false,
-      bullets: [
-        "Developed and launched 5+ Android applications on the Google Play Store.",
-        "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-        "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-      ],
-    },
-    {
-      role: "Android Developer",
-      company: "MSIB Kampus Merdeka",
-      period: "Aug 2021 – Jan 2022",
-      isCurrent: false,
-      bullets: [
-        "Developed and launched 5+ Android applications on the Google Play Store.",
-        "Integrated RESTful APIs using Retrofit and handled local caching with Room.",
-        "Collaborated closely with UX/UI designers to implement pixel-perfect designs.",
-      ],
-    },
-  ],
-  achievements: [],
-  cta: {
-    heading: "Ready to build something amazing?",
-    subtext: "I'm currently available for freelance projects and open to full-time opportunities. Let's discuss how I can help your team.",
-    buttonLabel: "Get in Touch",
-    email: "febriandev@email.com",
-  },
-  social: {
-    github: "https://github.com/FebrianDev",
-    linkedin: "https://linkedin.com/in/",
-  },
-};
-
-// Dekoratif Kode Latar Belakang Hero
-const CODE = `<span class="cm">// StreamFlow Adaptive Bitrate</span>
-<span class="kw">class</span> <span class="cls">VideoStreamManager</span>(
-    <span class="kw">private val</span> <span class="fn">exoPlayer</span>: ExoPlayer
-) {
-    <span class="kw">fun</span> <span class="fn">initStream</span>(url: String) {
-        <span class="kw">val</span> mediaItem = MediaItem.fromUri(url)
-        <span class="kw">val</span> source = HlsMediaSource
-            .Factory(dataSourceFactory)
-            .createMediaSource(mediaItem)
-        exoPlayer.<span class="fn">setMediaSource</span>(source)
-        exoPlayer.<span class="fn">prepare</span>()
-    }
-}
-
-// Clean Architecture ViewModel
-<span class="kw">class</span> <span class="cls">DashboardViewModel</span> @HiltViewModel (
-    <span class="kw">private val</span> <span class="fn">repo</span>: FitnessRepository
-) : ViewModel() {
-    <span class="kw">val</span> uiState: StateFlow&lt;UiState&gt; =
-        repo.<span class="fn">observeSteps</span>()
-            .<span class="fn">map</span> { steps -&gt; UiState.<span class="fn">Success</span>(steps) }
-            .<span class="fn">stateIn</span>(viewModelScope, <span class="cls">SharingStarted</span>.Lazily, UiState.Loading)
-}
-
-// Compose UI Component
-<span class="fn">@Composable</span>
-<span class="kw">fun</span> <span class="fn">StepCounter</span>(steps: Int, goal: Int) {
-    <span class="kw">val</span> progress = (steps.toFloat() / goal)
-    <span class="cls">Column</span>(horizontalAlignment = <span class="cls">Alignment</span>.CenterHorizontally) {
-        <span class="cls">CircularProgressIndicator</span>(progress = progress)
-        <span class="cls">Text</span>(text = <span class="str">"$steps / $goal steps"</span>)
-    }
-}
-
-// Room DB Entity
-<span class="fn">@Entity</span>(tableName = <span class="str">"workouts"</span>)
-<span class="kw">data class</span> <span class="cls">WorkoutEntity</span>(
-    <span class="fn">@PrimaryKey</span>(autoGenerate = <span class="kw">true</span>) <span class="kw">val</span> id: Int = <span class="num">0</span>,
-    <span class="kw">val</span> date: Long,
-    <span class="kw">val</span> steps: Int,
-    <span class="kw">val</span> calories: Float
-)
-`;
-
-function buildMockup(type, imageUrl) {
-  if (imageUrl) {
-    return `<img src="${escapeHtml(imageUrl)}" alt="Project preview" class="project-custom-img" />`;
-  }
-  if (type === "stream") {
-    return `
-    <div class="phone-mockup">
-      <div class="phone-inner">
-        <div class="phone-landscape"></div>
-        <div class="phone-nav-bar">
-          <div class="phone-nav-item active"></div>
-          <div class="phone-nav-item"></div>
-          <div class="phone-nav-item"></div>
-        </div>
-      </div>
-    </div>`;
-  }
-  if (type === "ring") {
-    return `
-    <div class="phone-mockup">
-      <div class="phone-inner">
-        <div class="ring-chart"><span>75%</span></div>
-      </div>
-    </div>`;
-  }
-  return "";
-}
+const createClient = globalThis.supabase?.createClient;
+const supabase =
+  isSupabaseConfigured() && typeof createClient === "function"
+    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
 
 function escapeHtml(str) {
   if (!str) return "";
@@ -216,128 +23,193 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-// ----------------------------------------------------
-// FUNGSI RENDER SELURUH TAMPILAN KE DOM
-// ----------------------------------------------------
+function sanitizeUrl(url) {
+  if (!url) return "#";
+  const trimmed = String(url).trim();
+  if (!trimmed || trimmed === "#") return "#";
+  if (trimmed.startsWith("#") || trimmed.startsWith("/")) return trimmed;
+  if (typeof URL === "undefined") {
+    return /^(https?:\/\/|mailto:)/i.test(trimmed) ? trimmed : "#";
+  }
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
+      return parsed.href;
+    }
+  } catch {
+    return "#";
+  }
+  return "#";
+}
+
+const PROJECT_LOGO_SVGS = {
+  field: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>`,
+  qr: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM17 17h4v4M14 21h3M21 14v3"/></svg>`,
+  stream: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>`,
+  compose: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+  bst: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M10.5 7L7 15.5M13.5 7L17 15.5"/></svg>`,
+  ring: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>`,
+};
+
+function buildProjectBanner(project) {
+  const safeImg = sanitizeUrl(project.imageUrl);
+  if (safeImg !== "#") {
+    return `<img src="${escapeHtml(safeImg)}" alt="${escapeHtml(project.title)} preview" class="project-custom-img" />`;
+  }
+  const svg = PROJECT_LOGO_SVGS[project.mockupType] || PROJECT_LOGO_SVGS.field;
+  return `<div class="project-banner-mark" aria-hidden="true">${svg}</div>`;
+}
+
+function buildProjectLogo(project, index) {
+  const safeIcon = sanitizeUrl(project.iconUrl);
+  if (safeIcon !== "#") {
+    return `
+    <div class="project-logo has-img">
+      <img src="${escapeHtml(safeIcon)}" alt="${escapeHtml(project.title)} logo" />
+    </div>`;
+  }
+  const svg = PROJECT_LOGO_SVGS[project.mockupType] || PROJECT_LOGO_SVGS.field;
+  return `
+    <div class="project-logo project-logo-${index % 4}" aria-hidden="true">
+      ${svg}
+    </div>`;
+}
+
 function renderPortfolio(data) {
-  // Page Title
+  const safeResumeUrl = sanitizeUrl(data.resumeUrl);
+  const hasResumeUrl = safeResumeUrl !== "#";
+
   document.getElementById("page-title").textContent = `${data.name} | ${data.role}`;
 
-  // Navbar
   document.getElementById("navbar").innerHTML = `
     <a href="#" class="nav-logo">
-      <span class="logo-icon">${data.initials}</span>
-      ${data.name} | ${data.role}
+      <span class="logo-icon">${escapeHtml(data.initials)}</span>
+      ${escapeHtml(data.brandName || data.name)} | ${escapeHtml(data.role)}
     </a>
     <ul class="nav-links">
       <li><a href="#about">Home</a></li>
       <li><a href="#about-me">About</a></li>
       <li><a href="#experience">Experience</a></li>
-      ${data.achievements && data.achievements.length > 0 ? `<li><a href="#achievements">Achievements</a></li>` : ""}
       <li><a href="#projects">Projects</a></li>
+      ${data.achievements && data.achievements.length > 0 ? `<li><a href="#achievements">Achievements</a></li>` : ""}
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="${data.resumeUrl}" class="btn btn-outline" target="_blank">Resume</a>
+      ${hasResumeUrl ? `<a href="${escapeHtml(safeResumeUrl)}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">Resume</a>` : ""}
       <a href="#contact" class="btn btn-primary">Hire Me</a>
     </div>`;
 
-  // Hero Background Code
   const codeBg = document.getElementById("code-bg");
-  if (codeBg) codeBg.innerHTML = CODE + CODE;
+  if (codeBg) codeBg.innerHTML = HERO_CODE_SNIPPET + HERO_CODE_SNIPPET;
 
-  // Hero Content
   const h = data.hero;
   document.getElementById("hero-content").innerHTML = `
     <div class="status-badge"><span class="status-dot"></span>${escapeHtml(h.statusText)}</div>
     <h1 class="hero-title">${escapeHtml(h.titleLine1)}<br><span class="accent">${escapeHtml(h.titleLine2)}</span></h1>
     <p class="hero-sub">${escapeHtml(h.subtitle)}</p>
     <div class="hero-actions">
-      <a href="${h.ctaPrimary.href}" class="btn btn-primary">${escapeHtml(h.ctaPrimary.label)}</a>
-      <a href="${h.ctaSecondary.href}" class="btn btn-outline">${escapeHtml(h.ctaSecondary.label)}</a>
+      <a href="${escapeHtml(sanitizeUrl(h.ctaPrimary.href))}" class="btn btn-primary">${escapeHtml(h.ctaPrimary.label)}</a>
+      <a href="${escapeHtml(sanitizeUrl(h.ctaSecondary.href))}" class="btn btn-outline">${escapeHtml(h.ctaSecondary.label)}</a>
     </div>`;
 
-  // About Me
   const am = data.aboutMe;
   const avatarEl = document.getElementById("about-avatar");
   if (avatarEl) {
-    if (am.photoUrl) {
-      avatarEl.innerHTML = `<img src="${escapeHtml(am.photoUrl)}" alt="${escapeHtml(data.name)}">`;
+    const safePhoto = sanitizeUrl(am.photoUrl);
+    if (safePhoto !== "#") {
+      avatarEl.innerHTML = `<img src="${escapeHtml(safePhoto)}" alt="${escapeHtml(data.name)}">`;
     } else {
       avatarEl.textContent = data.initials;
     }
   }
 
   document.getElementById("about-stats").innerHTML = (am.stats || [])
-    .map((s) => `
+    .map(
+      (s) => `
     <div class="stat-card">
       <div class="stat-num">${escapeHtml(s.num)}</div>
       <div class="stat-label">${escapeHtml(s.label)}</div>
-    </div>`)
+    </div>`
+    )
     .join("");
 
   document.getElementById("about-bio").innerHTML = (am.bio || [])
     .map((p) => `<p>${escapeHtml(p)}</p>`)
     .join("");
 
+  const aboutEduEl = document.getElementById("about-education");
+  if (aboutEduEl) {
+    if (am.education) {
+      aboutEduEl.style.display = "flex";
+      aboutEduEl.innerHTML = `
+        <span aria-hidden="true">${escapeHtml(am.education.icon || "🎓")}</span>
+        <div><strong>${escapeHtml(am.education.institution)}</strong><br>${escapeHtml(am.education.summary)}</div>`;
+    } else {
+      aboutEduEl.style.display = "none";
+    }
+  }
+
   document.getElementById("about-highlights").innerHTML = (am.highlights || [])
-    .map((hl) => `
+    .map(
+      (hl) => `
     <div class="highlight-item">
-      <div class="highlight-icon">${hl.icon}</div>
-      <span>${escapeHtml(hl.text)}</span>
-    </div>`)
+      <div class="highlight-icon">${escapeHtml(hl.icon)}</div>
+      <span>${hl.label ? `<strong>${escapeHtml(hl.label)}:</strong> ` : ""}${escapeHtml(hl.text)}</span>
+    </div>`
+    )
     .join("");
 
   document.getElementById("about-interests").innerHTML = (am.interests || [])
     .map((tag) => `<span class="interest-tag">${escapeHtml(tag)}</span>`)
     .join("");
 
-  // Tech Stack
-  const ts = data.techStack;
-  document.getElementById("tech-header").innerHTML = `
-    <div><h2>Tech Stack</h2><p>${escapeHtml(ts.sectionSubtitle)}</p></div>
-    <a href="${data.resumeUrl}" class="view-link">${escapeHtml(ts.resumeLink.label)} →</a>`;
-
-  document.getElementById("tech-grid").innerHTML = (ts.items || [])
-    .map((item, i) => `
-    <div class="tech-card fade-in stagger-${(i % 4) + 1}">
-      <div class="tech-icon"${item.iconBg ? ` style="background:${item.iconBg}"` : ""}>${item.icon}</div>
-      <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.desc)}</p>
-    </div>`)
-    .join("");
-
-  // Projects (DARI SUPABASE)
   const projectsGrid = document.getElementById("projects-grid");
   if (data.projects && data.projects.length > 0) {
     projectsGrid.innerHTML = data.projects
-      .map((p, i) => `
+      .map((p, i) => {
+        const safeProjUrl = sanitizeUrl(p.projectUrl);
+        const safeCaseUrl = sanitizeUrl(p.caseStudyUrl);
+        const projLabel = safeProjUrl.includes("play.google.com") ? "View on Google Play →" : "View Project →";
+        return `
       <div class="project-card fade-in stagger-${(i % 2) + 1}">
         <div class="project-img project-img-${i % 4}">
-          ${buildMockup(p.mockupType, p.imageUrl)}
+          ${buildProjectBanner(p)}
+        </div>
+        <div class="project-info">
+          <div class="project-card-top">
+            ${buildProjectLogo(p, i)}
+            <div class="project-head-meta">
+              <div class="project-title-row">
+                <h3>${escapeHtml(p.title)}</h3>
+                ${safeProjUrl !== "#" ? `<a href="${escapeHtml(safeProjUrl)}" class="icon-link" target="_blank" rel="noopener noreferrer" title="${projLabel}">↗</a>` : ""}
+              </div>
+            </div>
+          </div>
           <div class="project-tags">
             ${(p.tags || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
           </div>
+          <p class="project-desc">${escapeHtml(p.description)}</p>
+          ${
+            safeProjUrl !== "#" || safeCaseUrl !== "#"
+              ? `<div class="project-links">
+                  ${safeProjUrl !== "#" ? `<a href="${escapeHtml(safeProjUrl)}" class="case-link" target="_blank" rel="noopener noreferrer">${projLabel}</a>` : ""}
+                  ${safeCaseUrl !== "#" ? `<a href="${escapeHtml(safeCaseUrl)}" class="case-link" target="_blank" rel="noopener noreferrer">View Case Study →</a>` : ""}
+                </div>`
+              : ""
+          }
         </div>
-        <div class="project-info">
-          <div class="project-title-row">
-            <h3>${escapeHtml(p.title)}</h3>
-            ${p.projectUrl && p.projectUrl !== "#" ? `<a href="${p.projectUrl}" class="icon-link" target="_blank">↗</a>` : ""}
-          </div>
-          <p>${escapeHtml(p.description)}</p>
-          ${p.caseStudyUrl && p.caseStudyUrl !== "#" ? `<a href="${p.caseStudyUrl}" class="case-link">View Case Study →</a>` : ""}
-        </div>
-      </div>`)
+      </div>`;
+      })
       .join("");
   } else {
-    projectsGrid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;">Belum ada project yang diunggah.</p>`;
+    projectsGrid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;">No projects available yet.</p>`;
   }
 
-  // Experience (DARI SUPABASE)
   const expList = document.getElementById("exp-list");
   if (data.experience && data.experience.length > 0) {
     expList.innerHTML = data.experience
-      .map((exp) => `
+      .map(
+        (exp) => `
       <div class="exp-item fade-in">
         <div class="exp-dot${exp.isCurrent ? " active" : ""}"></div>
         <div class="exp-body">
@@ -346,58 +218,59 @@ function renderPortfolio(data) {
           <ul>${(exp.bullets || []).map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul>
         </div>
         <div class="exp-date${exp.isCurrent ? " current" : ""}">${escapeHtml(exp.period)}</div>
-      </div>`)
+      </div>`
+      )
       .join("");
   } else {
-    expList.innerHTML = `<p style="color:var(--text-muted);">Belum ada riwayat pengalaman.</p>`;
+    expList.innerHTML = `<p style="color:var(--text-muted);">No experience entries yet.</p>`;
   }
 
-  // Achievements (DARI SUPABASE)
   const achSection = document.getElementById("achievements");
   const achGrid = document.getElementById("achievements-grid");
   if (achSection && achGrid) {
     if (data.achievements && data.achievements.length > 0) {
       achSection.style.display = "block";
       achGrid.innerHTML = data.achievements
-        .map((a, i) => `
+        .map((a, i) => {
+          const safeCredUrl = sanitizeUrl(a.credentialUrl);
+          const safeAchImg = sanitizeUrl(a.imageUrl);
+          return `
         <div class="achieve-card fade-in stagger-${(i % 3) + 1}">
-          ${a.imageUrl ? `<img src="${escapeHtml(a.imageUrl)}" alt="${escapeHtml(a.title)}" class="achieve-img" />` : ""}
+          ${safeAchImg !== "#" ? `<img src="${escapeHtml(safeAchImg)}" alt="${escapeHtml(a.title)}" class="achieve-img" />` : ""}
           <div class="achieve-header-row">
             <span class="achieve-year">${escapeHtml(a.year || "")}</span>
-            ${a.credentialUrl && a.credentialUrl !== "#" ? `<a href="${a.credentialUrl}" class="icon-link" target="_blank" title="Lihat Sertifikat">↗</a>` : ""}
+            ${safeCredUrl !== "#" ? `<a href="${escapeHtml(safeCredUrl)}" class="icon-link" target="_blank" rel="noopener noreferrer" title="View Credential">↗</a>` : ""}
           </div>
           <h3>${escapeHtml(a.title)}</h3>
           <div class="achieve-issuer">${escapeHtml(a.issuer || "")}</div>
           ${a.description ? `<p class="achieve-desc">${escapeHtml(a.description)}</p>` : ""}
-          ${a.credentialUrl && a.credentialUrl !== "#" ? `<a href="${a.credentialUrl}" class="case-link" target="_blank">View Credential →</a>` : ""}
-        </div>`)
+          ${safeCredUrl !== "#" ? `<a href="${escapeHtml(safeCredUrl)}" class="case-link" target="_blank" rel="noopener noreferrer">View Credential →</a>` : ""}
+        </div>`;
+        })
         .join("");
     } else {
       achSection.style.display = "none";
     }
   }
 
-  // CTA
   const c = data.cta;
   document.getElementById("cta-content").innerHTML = `
     <h2>${escapeHtml(c.heading)}</h2>
     <p>${escapeHtml(c.subtext)}</p>
     <a href="mailto:${escapeHtml(c.email)}" class="btn-cta">✉ ${escapeHtml(c.buttonLabel)}</a>`;
 
-  // Footer
   const s = data.social;
   document.getElementById("footer").innerHTML = `
     <p>© ${data.year} ${escapeHtml(data.name)}. All rights reserved.</p>
     <div class="footer-links">
-      <a href="${s.github}" title="GitHub" target="_blank">
+      <a href="${escapeHtml(sanitizeUrl(s.github))}" title="GitHub" target="_blank" rel="noopener noreferrer">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
       </a>
-      <a href="${s.linkedin}" title="LinkedIn" target="_blank">
+      <a href="${escapeHtml(sanitizeUrl(s.linkedin))}" title="LinkedIn" target="_blank" rel="noopener noreferrer">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       </a>
     </div>`;
 
-  // Animasi Scroll
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -410,63 +283,54 @@ function renderPortfolio(data) {
   setTimeout(() => document.querySelector(".hero .fade-in")?.classList.add("visible"), 100);
 }
 
-// ----------------------------------------------------
-// FUNGSI UTAMA: LOAD DATA LANGSUNG DARI SUPABASE
-// ----------------------------------------------------
 async function loadPortfolioFromSupabase() {
+  const portfolioData = JSON.parse(JSON.stringify(PORTFOLIO_DEFAULT_DATA));
+
   if (!supabase) {
-    console.warn("Supabase belum terkonfigurasi, menggunakan data fallback.");
-    renderPortfolio(defaultData);
+    renderPortfolio(portfolioData);
     return;
   }
 
   try {
-    // 1. Fetch Profile Settings
-    const { data: profile } = await supabase
-      .from("profile_settings")
-      .select("*")
-      .eq("id", 1)
-      .maybeSingle();
+    const [profileRes, projRes, expRes, achRes] = await Promise.all([
+      supabase.from("profile_settings").select("*").eq("id", 1).maybeSingle(),
+      supabase.from("projects").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: false }),
+      supabase.from("experiences").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: false }),
+      supabase.from("achievements").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: false }),
+    ]);
 
-    if (profile) {
-      if (profile.status_text) defaultData.hero.statusText = profile.status_text;
-      if (profile.hero_title_1) defaultData.hero.titleLine1 = profile.hero_title_1;
-      if (profile.hero_title_2) defaultData.hero.titleLine2 = profile.hero_title_2;
-      if (profile.hero_subtitle) defaultData.hero.subtitle = profile.hero_subtitle;
-      if (profile.bio && profile.bio.length > 0) defaultData.aboutMe.bio = profile.bio;
-      if (profile.email) defaultData.cta.email = profile.email;
-      if (profile.resume_url) defaultData.resumeUrl = profile.resume_url;
-      if (profile.github_url) defaultData.social.github = profile.github_url;
-      if (profile.linkedin_url) defaultData.social.linkedin = profile.linkedin_url;
+    if (!profileRes.error && profileRes.data) {
+      applySupabaseProfileOverrides(portfolioData, profileRes.data);
     }
 
-    // 2. Fetch Projects langsung dari Supabase
-    const { data: projects, error: projErr } = await supabase
-      .from("projects")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!projErr && projects) {
-      defaultData.projects = projects.map((p) => ({
+    if (!projRes.error && projRes.data && !isLegacySupabaseProjects(projRes.data)) {
+      const defaultIconByTitle = new Map(
+        PORTFOLIO_DEFAULT_DATA.projects.map((item) => [item.title.toLowerCase(), item.iconUrl || ""])
+      );
+      const defaultIconByUrl = new Map(
+        PORTFOLIO_DEFAULT_DATA.projects
+          .filter((item) => item.projectUrl && item.projectUrl !== "#")
+          .map((item) => [item.projectUrl, item.iconUrl || ""])
+      );
+      portfolioData.projects = projRes.data.map((p) => ({
         id: p.id,
         title: p.title,
         tags: p.tags || [],
         description: p.description || "",
         caseStudyUrl: p.case_study_url || "#",
         projectUrl: p.project_url || "#",
-        mockupType: p.mockup_type || "stream",
+        mockupType: p.mockup_type || "field",
         imageUrl: p.image_url || "",
+        iconUrl:
+          p.icon_url ||
+          defaultIconByUrl.get(p.project_url || "") ||
+          defaultIconByTitle.get((p.title || "").toLowerCase()) ||
+          "",
       }));
     }
 
-    // 3. Fetch Experiences langsung dari Supabase
-    const { data: experiences, error: expErr } = await supabase
-      .from("experiences")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!expErr && experiences) {
-      defaultData.experience = experiences.map((exp) => ({
+    if (!expRes.error && expRes.data && !isLegacySupabaseExperiences(expRes.data)) {
+      portfolioData.experience = expRes.data.map((exp) => ({
         id: exp.id,
         role: exp.role,
         company: exp.company,
@@ -476,14 +340,8 @@ async function loadPortfolioFromSupabase() {
       }));
     }
 
-    // 4. Fetch Achievements langsung dari Supabase
-    const { data: achievements, error: achErr } = await supabase
-      .from("achievements")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!achErr && achievements) {
-      defaultData.achievements = achievements.map((a) => ({
+    if (!achRes.error && achRes.data && achRes.data.length > 0) {
+      portfolioData.achievements = achRes.data.map((a) => ({
         id: a.id,
         title: a.title,
         issuer: a.issuer,
@@ -496,11 +354,8 @@ async function loadPortfolioFromSupabase() {
   } catch (err) {
     console.error("Gagal memuat data dari Supabase:", err);
   } finally {
-    // Render data final dari Supabase ke tampilan web
-    renderPortfolio(defaultData);
+    renderPortfolio(portfolioData);
   }
 }
 
-// Jalankan pengambilan data saat halaman dimuat
 loadPortfolioFromSupabase();
-
